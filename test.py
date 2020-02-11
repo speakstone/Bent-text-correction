@@ -9,6 +9,7 @@ ix_1, iy_1 = None, None # 前一个坐标点
 draw_label = []
 draw_label_i = []
 
+
 def draw_circle(event, x, y, flags, param):
     global ix, iy, ix_1, iy_1, draw_label_i ,draw_label
 
@@ -25,10 +26,12 @@ def draw_circle(event, x, y, flags, param):
     elif event == cv2.EVENT_RBUTTONDOWN:
         # 鼠标右键按下事件
         draw_label.append(draw_label_i)
-        draw_label_i = draw_label_i[-1]
+        draw_label_i = [draw_label_i[-1]]
+        print(draw_label_i)
 
 # img = np.zeros((512, 512, 3), np.uint8)
 img = cv2.imread("seal.jpg")
+image = img.copy()
 cv2.namedWindow('image')
 cv2.setMouseCallback('image', draw_circle) #设置鼠标事件的回调函数
 
@@ -36,15 +39,18 @@ while(1):
     cv2.imshow('image', img)
     k = cv2.waitKey(1) & 0xFF
     if k == ord(' '):
-        print(draw_label)
-        w, h, _ = img.shape
-        print("w, h", w, h)
+        w, h, _ = image.shape
         c_src = original_coordinates_get(draw_label, w, h)
-        c_dst = transfor_coordinates_get(draw_label, (w, h))
-        warped = warp_image_cv(img, c_src, c_dst, dshape=(512, 512))
+        c_dst = transfor_coordinates_get(draw_label, w, h)
+        warped = warp_image_cv(image, c_src, c_dst, dshape=(651, 650))
+        print(c_dst)
+        img_save = image_slice(warped, c_dst)
+
+        cv2.imwrite("result.jpg", img_save)
         show_warped(img, c_src, c_dst, warped)
         break
-
-
-
-# cv2.destroyAllWindows()
+####
+# 以左下角作为第一个点顺时针左键单击打标
+# 每打标结束一个边以右击单击保存
+# 打标完四边以空格结束退出
+####

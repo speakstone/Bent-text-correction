@@ -71,7 +71,6 @@ def uniform_grid(shape):
 
 def tps_theta_from_points(c_src, c_dst, reduced=False):
     delta = c_src - c_dst
-
     cx = np.column_stack((c_dst, delta[:, 0]))
     cy = np.column_stack((c_dst, delta[:, 1]))
 
