@@ -30,7 +30,8 @@ def draw_circle(event, x, y, flags, param):
         print(draw_label_i)
 
 # img = np.zeros((512, 512, 3), np.uint8)
-img = cv2.imread("seal.jpg")
+img = cv2.imread("img5.jpg")
+img = cv2.resize(img,(512,512))
 image = img.copy()
 cv2.namedWindow('image')
 cv2.setMouseCallback('image', draw_circle) #设置鼠标事件的回调函数
@@ -42,7 +43,7 @@ while(1):
         w, h, _ = image.shape
         c_src = original_coordinates_get(draw_label, w, h)
         c_dst = transfor_coordinates_get(draw_label, w, h)
-        warped = warp_image_cv(image, c_src, c_dst, dshape=(651, 650))
+        warped = warp_image_cv(image, c_src, c_dst, dshape=(w, h))
         print(c_dst)
         img_save = image_slice(warped, c_dst)
 
